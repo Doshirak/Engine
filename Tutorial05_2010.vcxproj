@@ -373,6 +373,7 @@
   </ItemDefinitionGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="cube.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="setCube.cpp" />
@@ -383,6 +384,7 @@
     <None Include="Tutorial05.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cube.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="engine.h" />
     <CLInclude Include="resource.h" />

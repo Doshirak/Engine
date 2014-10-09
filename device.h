@@ -63,6 +63,7 @@ private:
 	XMMATRIX                g_World2;
 	XMMATRIX                g_View;
 	XMMATRIX                g_Projection;
-
+	// View port
+	D3D11_VIEWPORT vp;
 	HRESULT compileShader(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 };
