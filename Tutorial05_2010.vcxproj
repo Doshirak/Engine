@@ -377,6 +377,7 @@
     <ClCompile Include="device.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sphere.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -387,6 +388,7 @@
     <ClInclude Include="device.h" />
     <ClInclude Include="engine.h" />
     <CLInclude Include="resource.h" />
+    <ClInclude Include="sphere.h" />
     <ClInclude Include="window.h" />
     <ResourceCompile Include="Tutorial05.rc" />
   </ItemGroup>

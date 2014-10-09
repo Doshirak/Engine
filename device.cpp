@@ -1,7 +1,7 @@
 #include "Device.h"
 #include "setCube.h"
 #include "cube.h"
-#include <string.h>
+#include "sphere.h"
 
 Device::Device(){
 
@@ -261,9 +261,10 @@ void Device::render()
 	g_pImmediateContext->DrawIndexed(cube.getIndicesNumber(), 0, 0);									
 
 	// SECOND CUBE
-	Cube cube2(10, 1);
-	setVertexBuffer(&bd, &InitData, cube2.getVerteces(), cube2.getVerticesNumber());
-	setIndexBuffer(&bd, &InitData, cube2.getIndices(), cube2.getIndicesNumber());
+	Sphere sphere(20, 3.0f);
+	//Cube cube2(10, 3f);
+	setVertexBuffer(&bd, &InitData, sphere.getVerteces(), sphere.getVerticesNumber());
+	setIndexBuffer(&bd, &InitData, sphere.getIndices(), sphere.getIndicesNumber());
 	matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
 	cb1.mWorld = XMMatrixTranspose(g_World1);
@@ -276,7 +277,7 @@ void Device::render()
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
-	g_pImmediateContext->DrawIndexed(cube.getIndicesNumber(), 0, 0);
+	g_pImmediateContext->DrawIndexed(sphere.getIndicesNumber(), 0, 0);
 
 	g_pSwapChain->Present(0, 0);
 }
