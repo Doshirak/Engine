@@ -376,7 +376,6 @@
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="engine.cpp" />
-    <ClCompile Include="setCube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -388,7 +387,6 @@
     <ClInclude Include="device.h" />
     <ClInclude Include="engine.h" />
     <CLInclude Include="resource.h" />
-    <ClInclude Include="setCube.h" />
     <ClInclude Include="window.h" />
     <ResourceCompile Include="Tutorial05.rc" />
   </ItemGroup>

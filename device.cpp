@@ -112,6 +112,7 @@ HRESULT Device::init()
 	g_pImmediateContext->OMSetRenderTargets(1, &g_pRenderTargetView, g_pDepthStencilView);
 
 	// Setup the 
+	D3D11_VIEWPORT vp;
 	vp.Width = (FLOAT)width;
 	vp.Height = (FLOAT)height;
 	vp.MinDepth = 0.0f;
@@ -177,61 +178,13 @@ HRESULT Device::init()
 
 void Device::render()
 {
-	SimpleVertex vertices[arrSize1 * 6];
-	WORD indices[arrSize2 * 6];
-	Cube cube(SIZE, 0.3f);
-
-	memcpy(vertices, cube.getVerteces(), arrSize1 * 6 * sizeof(SimpleVertex));
-	memcpy(indices, cube.getIndices(), arrSize2 * 6 * sizeof(WORD));
-
-	//float d = 0.3f;
-	//float x0 = -(SIZE / 2) * d;
-	//float y0 = -(SIZE / 2) * d;
-	//float z0 = -(SIZE / 2) * d;
-	//setVertices(vertices, SIZE, x0, y0, z0, d, XY);
-	//setIndices(indices, SIZE, 0);
-	//setVertices(vertices + arrSize1, SIZE, x0, y0, z0, d, XZ);
-	//setIndices(indices + arrSize2, SIZE, arrSize1);
-	//setVertices(vertices + arrSize1 * 2, SIZE, x0, y0, z0, d, YZ);
-	//setIndices(indices + arrSize2 * 2, SIZE, arrSize1 * 2);
-
-	//setVertices(vertices + arrSize1 * 3, SIZE, x0, y0, z0 + (SIZE - 1) * d, d, XY);
-	//setIndices(indices + arrSize2 * 3, SIZE, arrSize1 * 3);
-	//setVertices(vertices + arrSize1 * 4, SIZE, x0, y0 + (SIZE - 1) * d, z0, d, XZ);
-	//setIndices(indices + arrSize2 * 4, SIZE, arrSize1 * 4);
-	//setVertices(vertices + arrSize1 * 5, SIZE, x0 + (SIZE - 1) * d, y0, z0, d, YZ);
-	//setIndices(indices + arrSize2 * 5, SIZE, arrSize1 * 5);
-
-
 	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(SimpleVertex)* arrSize1 * FACES;											// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
 	D3D11_SUBRESOURCE_DATA InitData;
+	ZeroMemory(&bd, sizeof(bd));
 	ZeroMemory(&InitData, sizeof(InitData));
-	InitData.pSysMem = vertices;
-	HRESULT hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
-	/*if (FAILED(hr))
-		return hr;*/
-
-	// Set vertex buffer
-	UINT stride = sizeof(SimpleVertex);
-	UINT offset = 0;
-	g_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
-
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(WORD)* arrSize2 * FACES;													// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-	InitData.pSysMem = indices;
-	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
-	/*if (FAILED(hr))
-		return hr;
-		*/
-	// Set index buffer
-	g_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	Cube cube(SIZE, 0.3f);
+	setVertexBuffer(&bd, &InitData, cube.getVerteces(), cube.getVerticesNumber());
+	setIndexBuffer(&bd, &InitData, cube.getIndices(), cube.getIndicesNumber());
 
 	// Set primitive topology
 	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -241,10 +194,8 @@ void Device::render()
 	bd.ByteWidth = sizeof(ConstantBuffer);
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	bd.CPUAccessFlags = 0;
-	hr = g_pd3dDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
-	/*if (FAILED(hr))
-		return hr;
-		*/
+	g_pd3dDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
+	
 	// Initialize the world matrix
 	g_World1 = XMMatrixIdentity();
 	g_World2 = XMMatrixIdentity();
@@ -293,6 +244,8 @@ void Device::render()
 	g_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	ConstantBuffer cb1;
+
+	// FIRST CUBE 
 	XMMATRIX matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
 	cb1.mWorld = XMMatrixTranspose(g_World1);
@@ -302,13 +255,15 @@ void Device::render()
 	cb1.time = abs(sin(t));
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
 
-
-	// SECOND CUBE 
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
-	g_pImmediateContext->DrawIndexed(arrSize2 * FACES, 0, 0);									// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	g_pImmediateContext->DrawIndexed(cube.getIndicesNumber(), 0, 0);									
 
+	// SECOND CUBE
+	Cube cube2(10, 1);
+	setVertexBuffer(&bd, &InitData, cube2.getVerteces(), cube2.getVerticesNumber());
+	setIndexBuffer(&bd, &InitData, cube2.getIndices(), cube2.getIndicesNumber());
 	matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
 	cb1.mWorld = XMMatrixTranspose(g_World1);
@@ -321,7 +276,7 @@ void Device::render()
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
-	g_pImmediateContext->DrawIndexed(arrSize2 * FACES, 0, 0);
+	g_pImmediateContext->DrawIndexed(cube.getIndicesNumber(), 0, 0);
 
 	g_pSwapChain->Present(0, 0);
 }
@@ -341,6 +296,30 @@ void Device::cleanup()
 	if (g_pSwapChain) g_pSwapChain->Release();
 	if (g_pImmediateContext) g_pImmediateContext->Release();
 	if (g_pd3dDevice) g_pd3dDevice->Release();
+}
+
+void Device::setVertexBuffer(D3D11_BUFFER_DESC* bd, D3D11_SUBRESOURCE_DATA* InitData, SimpleVertex* vertices, UINT size) {
+
+	bd->Usage = D3D11_USAGE_DEFAULT;
+	bd->ByteWidth = sizeof(SimpleVertex) * size;											
+	bd->BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd->CPUAccessFlags = 0;
+
+	InitData->pSysMem = vertices;
+	g_pd3dDevice->CreateBuffer(bd, InitData, &g_pVertexBuffer);
+	UINT stride = sizeof(SimpleVertex);
+	UINT offset = 0;
+	g_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+}
+
+void Device::setIndexBuffer(D3D11_BUFFER_DESC* bd, D3D11_SUBRESOURCE_DATA* InitData, WORD* indices, UINT size) {
+	bd->Usage = D3D11_USAGE_DEFAULT;
+	bd->ByteWidth = sizeof(WORD)* size;													// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	bd->BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bd->CPUAccessFlags = 0;
+	InitData->pSysMem = indices;
+	g_pd3dDevice->CreateBuffer(bd, InitData, &g_pIndexBuffer);
+	g_pImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 }
 
 HRESULT Device::compileShader(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)

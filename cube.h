@@ -6,6 +6,8 @@ public:
 	Cube();
 	Cube(int size, float d);
 	~Cube();
+	int getVerticesNumber();
+	int getIndicesNumber();
 	SimpleVertex* getVerteces();
 	WORD* getIndices();
 private:

@@ -42,6 +42,8 @@ public:
 	HRESULT init();
 	void render();
 	void cleanup();
+	void setVertexBuffer(D3D11_BUFFER_DESC* bd, D3D11_SUBRESOURCE_DATA* InitData, SimpleVertex* vertices, UINT size);
+	void setIndexBuffer(D3D11_BUFFER_DESC* bd, D3D11_SUBRESOURCE_DATA* InitData, WORD* indices, UINT size);
 	HINSTANCE               g_hInst = NULL;
 	HWND                    g_hWnd = NULL;
 private:
@@ -63,7 +65,5 @@ private:
 	XMMATRIX                g_World2;
 	XMMATRIX                g_View;
 	XMMATRIX                g_Projection;
-	// View port
-	D3D11_VIEWPORT vp;
 	HRESULT compileShader(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 };

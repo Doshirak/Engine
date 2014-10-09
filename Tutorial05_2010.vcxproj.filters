@@ -14,7 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="setCube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window.cpp" />
     <ClCompile Include="device.cpp" />
@@ -33,7 +32,6 @@
     <ResourceCompile Include="Tutorial05.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ClInclude Include="setCube.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="engine.h" />

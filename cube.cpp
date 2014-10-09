@@ -2,6 +2,8 @@
 
 Cube::Cube(){
 	size = DEFSIZE;
+	verticesN = size * size * 6;
+	indicesN = (size - 1) * (size - 1) * 36;
 	x0 = -(size / 2) * d;
 	y0 = -(size / 2) * d;
 	z0 = -(size / 2) * d;
@@ -12,6 +14,8 @@ Cube::Cube(){
 
 Cube::Cube(int size, float d){
 	this->size = size;
+	verticesN = size * size * 6;
+	indicesN = (size - 1) * (size - 1) * 36;
 	this->d = d;
 	x0 = -(size / 2) * d;
 	y0 = -(size / 2) * d;
@@ -24,6 +28,14 @@ Cube::Cube(int size, float d){
 Cube::~Cube(){
 	delete[] vertices;
 	delete[] indices;
+}
+
+int Cube::getVerticesNumber(){
+	return verticesN;
+}
+
+int Cube::getIndicesNumber(){
+	return indicesN;
 }
 
 SimpleVertex* Cube::getVerteces(){
