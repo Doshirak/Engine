@@ -252,7 +252,9 @@ void Device::render()
 	cb1.mView = XMMatrixTranspose(g_View);
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
 	cb1.Matrix = matrix;
+	cb1.flag = 1;
 	cb1.time = abs(sin(t));
+	cb1.PHI = XM_PI;
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
 
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
@@ -271,7 +273,10 @@ void Device::render()
 	cb1.mView = XMMatrixTranspose(g_View);
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
 	cb1.Matrix = matrix;
+	cb1.flag = 0;
 	cb1.time = abs(sin(t + 10));
+	//cb1.time = 0;
+	cb1.PHI = XM_PI;
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
 
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);

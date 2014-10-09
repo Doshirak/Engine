@@ -32,6 +32,8 @@ struct ConstantBuffer
 	XMMATRIX mProjection;
 	XMMATRIX Matrix;
 	float time;
+	int flag;
+	float PHI;
 };
 
 class Device {
