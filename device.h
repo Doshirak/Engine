@@ -21,8 +21,8 @@ const int arrSize2 = (SIZE - 1) * (SIZE - 1) * 6;
 
 struct SimpleVertex
 {
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
+    XMFLOAT3 Pos;
+    XMFLOAT3 Normal;
 };
 
 struct ConstantBuffer
@@ -34,6 +34,9 @@ struct ConstantBuffer
 	float time;
 	int flag;
 	float PHI;
+	XMFLOAT4 vLightDir[2];
+	XMFLOAT4 vLightColor[2];
+	XMFLOAT4 vOutputColor;
 };
 
 class Device {

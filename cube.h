@@ -26,4 +26,5 @@ private:
 	void setCube();
 	void setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode);
 	void setFaceIndices(WORD* indices, int size, int offset);
+	void setFaceIndices2(WORD* indices, int size, int offset);
 };

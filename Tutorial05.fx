@@ -16,6 +16,9 @@ cbuffer ConstantBuffer : register( b0 )
     float time;
 	int flag;
 	float PHI;
+	float4 vLightDir[2];
+	float4 vLightColor[2];
+	float4 vOutputColor;
 }
 
 
@@ -23,13 +26,13 @@ cbuffer ConstantBuffer : register( b0 )
 struct VS_INPUT
 {
     float4 Pos : POSITION;
-    float4 Color : COLOR;
+	float3 Norm : NORMAL;
 };
 
 struct PS_INPUT
 {
     float4 Pos : SV_POSITION;
-    float4 Color : COLOR;
+	float3 Norm : TEXCOORD0;
 };
 
 
@@ -59,6 +62,7 @@ PS_INPUT VS( VS_INPUT input )
 	float agnle4 = PHI / 4;
 
     float rad = sqrt(x * x + y * y + z * z);
+
 	if (flag == 1) {
 		output.Pos.x = (input.Pos.x / rad) * (1 - time) + (input.Pos.x) * time;
 		output.Pos.y = (input.Pos.y / rad) * (1 - time) + (input.Pos.y) * time;
@@ -74,8 +78,7 @@ PS_INPUT VS( VS_INPUT input )
 	}
     output.Pos.w = 1;
     output.Pos = mul( output.Pos, Matrix );
-
-    output.Color = input.Color;
+	output.Norm = mul(input.Norm, World);
     
     return output;
 }
@@ -86,5 +89,20 @@ PS_INPUT VS( VS_INPUT input )
 //--------------------------------------------------------------------------------------
 float4 PS( PS_INPUT input) : SV_Target
 {
-    return input.Color;
+	float4 finalColor = 0;
+
+	//do NdotL lighting for 2 lights
+	for (int i = 0; i<2; i++)
+	{
+		finalColor += saturate(dot((float3)vLightDir[i], input.Norm) * vLightColor[i]);
+	}
+	finalColor.a = 1;
+	return finalColor;
+}
+
+// PSSolid - render a solid color
+//--------------------------------------------------------------------------------------
+float4 PSSolid(PS_INPUT input) : SV_Target
+{
+	return vOutputColor;
 }

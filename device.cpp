@@ -143,7 +143,7 @@ HRESULT Device::init()
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT numElements = ARRAYSIZE(layout);
 
@@ -187,7 +187,7 @@ void Device::render()
 	setIndexBuffer(&bd, &InitData, cube.getIndices(), cube.getIndicesNumber());
 
 	// Set primitive topology
-	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Create the constant buffer
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -201,8 +201,8 @@ void Device::render()
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -5.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 5.0f, -5.0f, 0.0f);
+	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
 
@@ -243,6 +243,19 @@ void Device::render()
 	g_pImmediateContext->ClearRenderTargetView(g_pRenderTargetView, ClearColor);
 	g_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+	// LIGHST
+
+	XMFLOAT4 vLightDirs[2] =
+	{
+		XMFLOAT4(-0.577f, 0.577f, -0.577f, 1.0f),
+		XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f),
+	};
+	XMFLOAT4 vLightColors[2] =
+	{
+		XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),
+		XMFLOAT4(0.5f, 0.0f, 0.0f, 1.0f)
+	};
+
 	ConstantBuffer cb1;
 
 	// FIRST CUBE 
@@ -253,8 +266,14 @@ void Device::render()
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
 	cb1.Matrix = matrix;
 	cb1.flag = 1;
-	cb1.time = abs(sin(t));
+	//cb1.time = abs(sin(t));
+	cb1.time = 1;
 	cb1.PHI = XM_PI;
+	cb1.vLightDir[0] = vLightDirs[0];
+	cb1.vLightDir[1] = vLightDirs[1];
+	cb1.vLightColor[0] = vLightColors[0];
+	cb1.vLightColor[1] = vLightColors[1];
+	cb1.vOutputColor = XMFLOAT4(0, 0, 0, 0);
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
 
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
@@ -263,26 +282,26 @@ void Device::render()
 	g_pImmediateContext->DrawIndexed(cube.getIndicesNumber(), 0, 0);									
 
 	// SECOND CUBE
-	Sphere sphere(20, 3.0f);
-	//Cube cube2(10, 3f);
-	setVertexBuffer(&bd, &InitData, sphere.getVerteces(), sphere.getVerticesNumber());
-	setIndexBuffer(&bd, &InitData, sphere.getIndices(), sphere.getIndicesNumber());
-	matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
-	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
-	cb1.mWorld = XMMatrixTranspose(g_World1);
-	cb1.mView = XMMatrixTranspose(g_View);
-	cb1.mProjection = XMMatrixTranspose(g_Projection);
-	cb1.Matrix = matrix;
-	cb1.flag = 0;
-	cb1.time = abs(sin(t + 10));
+	//Sphere sphere(20, 3.0f);
+	////Cube cube2(10, 3f);
+	//setVertexBuffer(&bd, &InitData, sphere.getVerteces(), sphere.getVerticesNumber());
+	//setIndexBuffer(&bd, &InitData, sphere.getIndices(), sphere.getIndicesNumber());
+	//matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
+	//matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
+	//cb1.mWorld = XMMatrixTranspose(g_World1);
+	//cb1.mView = XMMatrixTranspose(g_View);
+	//cb1.mProjection = XMMatrixTranspose(g_Projection);
+	//cb1.Matrix = matrix;
+	//cb1.flag = 0;
+	////cb1.time = abs(sin(t + 10));
 	//cb1.time = 0;
-	cb1.PHI = XM_PI;
-	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
+	//cb1.PHI = XM_PI;
+	//g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
 
-	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
-	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
-	g_pImmediateContext->DrawIndexed(sphere.getIndicesNumber(), 0, 0);
+	//g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
+	//g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	//g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
+	//g_pImmediateContext->DrawIndexed(sphere.getIndicesNumber(), 0, 0);
 
 	g_pSwapChain->Present(0, 0);
 }
@@ -320,7 +339,7 @@ void Device::setVertexBuffer(D3D11_BUFFER_DESC* bd, D3D11_SUBRESOURCE_DATA* Init
 
 void Device::setIndexBuffer(D3D11_BUFFER_DESC* bd, D3D11_SUBRESOURCE_DATA* InitData, WORD* indices, UINT size) {
 	bd->Usage = D3D11_USAGE_DEFAULT;
-	bd->ByteWidth = sizeof(WORD)* size;													// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	bd->ByteWidth = sizeof(WORD)* size;													
 	bd->BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd->CPUAccessFlags = 0;
 	InitData->pSysMem = indices;
