@@ -49,46 +49,42 @@ WORD* Cube::getIndices(){
 void Cube::setCube(){
 	int arrSize1 = size * size;
 	int arrSize2 = (size - 1) * (size - 1) * 6;
-	setFaceVertices(vertices, size, x0, y0, z0, d, XY);
+	setFaceVertices(vertices, size, x0, y0, z0, d, XY, XMFLOAT3(0.0f, 0.0f, -1.0f));
 	setFaceIndices(indices, size, 0);
-	setFaceVertices(vertices + arrSize1, size, x0, y0, z0, d, XZ);
+	setFaceVertices(vertices + arrSize1, size, x0, y0, z0, d, XZ, XMFLOAT3(0.0f, -1.0f, 0.0f));
 	setFaceIndices2(indices + arrSize2, size, arrSize1);
-	setFaceVertices(vertices + arrSize1 * 2, size, x0, y0, z0, d, YZ);
+	setFaceVertices(vertices + arrSize1 * 2, size, x0, y0, z0, d, YZ, XMFLOAT3(-1.0f, 0.0f, 0.0f));
 	setFaceIndices2(indices + arrSize2 * 2, size, arrSize1 * 2);
 
-	setFaceVertices(vertices + arrSize1 * 3, size, x0, y0, z0 + (size - 1) * d, d, XY);
+	setFaceVertices(vertices + arrSize1 * 3, size, x0, y0, z0 + (size - 1) * d, d, XY, XMFLOAT3(0.0f, 0.0f, 1.0f));
 	setFaceIndices2(indices + arrSize2 * 3, size, arrSize1 * 3);
-	setFaceVertices(vertices + arrSize1 * 4, size, x0, y0 + (size - 1) * d, z0, d, XZ);
+	setFaceVertices(vertices + arrSize1 * 4, size, x0, y0 + (size - 1) * d, z0, d, XZ, XMFLOAT3(0.0f, 1.0f, 0.0f));
 	setFaceIndices(indices + arrSize2 * 4, size, arrSize1 * 4);
-	setFaceVertices(vertices + arrSize1 * 5, size, x0 + (size - 1) * d, y0, z0, d, YZ);
+	setFaceVertices(vertices + arrSize1 * 5, size, x0 + (size - 1) * d, y0, z0, d, YZ, XMFLOAT3(1.0f, 0.0f, 0.0f));
 	setFaceIndices(indices + arrSize2 * 5, size, arrSize1 * 5);
 }
 
-void Cube::setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode)
+void Cube::setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n)
 {
 	for (int i = 0; i < size; ++i)
 	{
 		for (int j = 0; j < size; ++j)
 		{
-			XMFLOAT3 n = {0.0f, 0.0f, 0.0f};
 			int x, y, z;
 			if (mode == XY) {
 				x = x0 + d * j;
 				y = y0 + i * d;
 				z = z0;
-				n.z = 1;
 			}
 			else if (mode == XZ) {
 				x = x0 + d * j;
 				y = y0;
 				z = z0 + d * i;
-				n.y = 1;
 			}
 			else if (mode == YZ) {
 				x = x0;
 				y = y0 + i * d;
 				z = z0 + j * d;
-				n.x = 1;
 			}
 			vertices[i * size + j] = { XMFLOAT3(x, y, z), n };
 		}

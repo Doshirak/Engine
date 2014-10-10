@@ -62,14 +62,15 @@ void Sphere::setVertices()
 		for (int i = 0; i < size; ++i)
 		{
 			double phi = (float)2 * XM_PI / size * i;
-			vertices[h * size + i] = { XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)) };
+			vertices[h * size + i] = { XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)),
+				XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)) };
 		}
 	}
 	double theta = XM_PI / height * (height - 1);
 	for (int i = 0; i < size; ++i)
 	{
 		double phi = 2 * XM_PI / size * i;
-		vertices[(height - 1) * size + i] = { XMFLOAT3(x0, y0 + radius * cosf(theta), z0) };
+		vertices[(height - 1) * size + i] = { XMFLOAT3(x0, y0 + radius * cosf(theta), z0), XMFLOAT3(x0, y0 + radius * cosf(theta), z0) };
 	}
 }
 
@@ -81,18 +82,18 @@ void Sphere::setIndices()
 		for (int i = 0; i < size - 1; ++i)
 		{
 			indices[(h * size + i) * 6] = j;
-			indices[(h * size + i) * 6 + 1] = (j - size + 1);
-			indices[(h * size + i) * 6 + 2] = j - size;
+			indices[(h * size + i) * 6 + 1] = j - size;
+				indices[(h * size + i) * 6 + 2] = (j - size + 1);
 			indices[(h * size + i) * 6 + 3] = (j - size + 1);
-			indices[(h * size + i) * 6 + 4] = j;
-			indices[(h * size + i) * 6 + 5] = (j + 1);
+			indices[(h * size + i) * 6 + 4] = (j + 1);
+			indices[(h * size + i) * 6 + 5] = j;
 			++j;
 		}
 		indices[((h + 1) * size - 1) * 6] = j;
-		indices[((h + 1) * size - 1) * 6 + 1] = h * size;
-		indices[((h + 1) * size - 1) * 6 + 2] = (h + 1) * size - 1;
+		indices[((h + 1) * size - 1) * 6 + 1] = (h + 1) * size - 1;
+		indices[((h + 1) * size - 1) * 6 + 2] = h * size;
 		indices[((h + 1) * size - 1) * 6 + 3] = h * size;
-		indices[((h + 1) * size - 1) * 6 + 4] = j;
-		indices[((h + 1) * size - 1) * 6 + 5] = (h + 1) * size;
+		indices[((h + 1) * size - 1) * 6 + 4] = (h + 1) * size;
+		indices[((h + 1) * size - 1) * 6 + 5] = j;
 	}
 }
