@@ -1,9 +1,25 @@
+#include <d3dx11.h>
+#include <xnamath.h>
+#include "device.h"
 #include "sphere.h"
 
 Sphere::Sphere(){
 	size = DEFSIZE;
 	height = size;
 	radius = 1;
+	verticesN = size * height;
+	indicesN = (size - 1) * height * 6;
+	x0 = 0;
+	y0 = 0;
+	z0 = 0;
+	vertices = new SimpleVertex[verticesN];
+	indices = new WORD[indicesN];
+	setSphere();
+}
+
+Sphere::Sphere(int size){
+	this->size = size;
+	height = this->size;
 	verticesN = size * height;
 	indicesN = (size - 1) * height * 6;
 	x0 = 0;
@@ -96,4 +112,20 @@ void Sphere::setIndices()
 		indices[((h + 1) * size - 1) * 6 + 4] = (h + 1) * size;
 		indices[((h + 1) * size - 1) * 6 + 5] = j;
 	}
+}
+
+XMMATRIX Sphere::getMatrix() {
+	return matrix;
+}
+
+void Sphere::setMatrix(const XMMATRIX& matrix) {
+	this->matrix = matrix;
+}
+
+ConstantBuffer Sphere::getConstantBuffer() {
+	return constantBuffer;
+}
+
+void Sphere::setConstantBuffer(const ConstantBuffer& constantBuffer) {
+	this->constantBuffer = constantBuffer;
 }

@@ -376,7 +376,9 @@
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="engine.cpp" />
+    <ClCompile Include="figute.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="figurePool.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
@@ -387,6 +389,8 @@
     <ClInclude Include="cube.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="engine.h" />
+    <ClInclude Include="figure.h" />
+    <ClInclude Include="figurePool.h" />
     <CLInclude Include="resource.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="window.h" />

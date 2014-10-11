@@ -20,6 +20,8 @@
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="figurePool.cpp" />
+    <ClCompile Include="figute.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Tutorial05.fx">
@@ -38,6 +40,8 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="figure.h" />
+    <ClInclude Include="figurePool.h" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

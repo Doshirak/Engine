@@ -173,6 +173,12 @@ HRESULT Device::init()
 	if (FAILED(hr))
 		return hr;
 
+	Figure* cube = (Figure*) new Cube(20);
+	Figure* sphere = (Figure*) new Sphere(20);
+
+	figurePool.add(cube);
+	figurePool.add(sphere);
+
 	return S_OK;
 }
 
@@ -199,7 +205,7 @@ void Device::render()
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -5.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -10.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
@@ -232,7 +238,7 @@ void Device::render()
 	// 2nd Cube:  Rotate around origin
 	XMMATRIX mSpin = XMMatrixRotationZ(-t);
 	XMMATRIX mOrbit = XMMatrixRotationY(-t * 2.0f);
-	XMMATRIX mTranslate = XMMatrixTranslation(-4.0f, 0.0f, 0.0f);
+	XMMATRIX mTranslate = XMMatrixTranslation(-6.0f, 0.0f, 0.0f);
 	XMMATRIX mScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
 
 	g_World2 = mScale * mSpin * mTranslate * mOrbit;
@@ -263,58 +269,56 @@ void Device::render()
 	// FIRST CUBE 
 	XMMATRIX matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
+	Figure* cube = figurePool.getFigures()[0];
+	cube->setMatrix(matrix);
+
 	cb1.mWorld = XMMatrixTranspose(g_World1);
 	cb1.mView = XMMatrixTranspose(g_View);
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
-	cb1.Matrix = matrix;
+	cb1.Matrix = cube->getMatrix();
 	cb1.flag = 1;
 	cb1.time = abs(sin(t));
-	//cb1.time = 1;
 	cb1.PHI = XM_PI;
 	cb1.vLightDir[0] = vLightDirs[0];
 	cb1.vLightDir[1] = vLightDirs[1];
 	cb1.vLightColor[0] = vLightColors[0];
 	cb1.vLightColor[1] = vLightColors[1];
 	cb1.vOutputColor = XMFLOAT4(0, 0, 0, 0);
+	
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
+	setVertexBuffer(&bd, &InitData, cube->getVerteces(), cube->getVerticesNumber());
+	setIndexBuffer(&bd, &InitData, cube->getIndices(), cube->getIndicesNumber());
+	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
+	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
+	g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	g_pImmediateContext->DrawIndexed(cube->getIndicesNumber(), 0, 0);									
 
-	Cube cube(20, 0.3f);
-	setVertexBuffer(&bd, &InitData, cube.getVerteces(), cube.getVerticesNumber());
-	setIndexBuffer(&bd, &InitData, cube.getIndices(), cube.getIndicesNumber());
+	// SPHERE
+	Sphere sphere(100, 3.0f);
+	setVertexBuffer(&bd, &InitData, sphere.getVerteces(), sphere.getVerticesNumber());
+	setIndexBuffer(&bd, &InitData, sphere.getIndices(), sphere.getIndicesNumber());
+	matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
+	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World2));
+	cb1.mWorld = XMMatrixTranspose(g_World2);
+	cb1.mView = XMMatrixTranspose(g_View);
+	cb1.mProjection = XMMatrixTranspose(g_Projection);
+	cb1.Matrix = matrix;
+	cb1.flag = 0;
+	cb1.vLightDir[0] = vLightDirs[0];
+	cb1.vLightDir[1] = vLightDirs[1];
+	cb1.vLightColor[0] = vLightColors[0];
+	cb1.vLightColor[1] = vLightColors[1];
+	cb1.vOutputColor = XMFLOAT4(0, 0, 0, 0);
+	cb1.time = abs(sin(t));
+	cb1.PHI = XM_PI;
+	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
 
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
 	g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	g_pImmediateContext->DrawIndexed(cube.getIndicesNumber(), 0, 0);									
-
-	//// SPHERE
-	//Sphere sphere(100, 3.0f);
-	//////Cube cube2(10, 3f);
-	//setVertexBuffer(&bd, &InitData, sphere.getVerteces(), sphere.getVerticesNumber());
-	//setIndexBuffer(&bd, &InitData, sphere.getIndices(), sphere.getIndicesNumber());
-	//matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
-	//matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
-	//cb1.mWorld = XMMatrixTranspose(g_World1);
-	//cb1.mView = XMMatrixTranspose(g_View);
-	//cb1.mProjection = XMMatrixTranspose(g_Projection);
-	//cb1.Matrix = matrix;
-	//cb1.flag = 0;
-	//cb1.vLightDir[0] = vLightDirs[0];
-	//cb1.vLightDir[1] = vLightDirs[1];
-	//cb1.vLightColor[0] = vLightColors[0];
-	//cb1.vLightColor[1] = vLightColors[1];
-	//cb1.vOutputColor = XMFLOAT4(0, 0, 0, 0);
-	//cb1.time = abs(sin(t + 10));
-	////cb1.time = 1;
-	//cb1.PHI = XM_PI;
-	//g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
-
-	//g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
-	//g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	//g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
-	//g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	//g_pImmediateContext->DrawIndexed(sphere.getIndicesNumber(), 0, 0);
+	g_pImmediateContext->DrawIndexed(sphere.getIndicesNumber(), 0, 0);
 
 	g_pSwapChain->Present(0, 0);
 }

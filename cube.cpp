@@ -1,3 +1,5 @@
+#include <d3dx11.h>
+#include <xnamath.h>
 #include "cube.h"
 
 Cube::Cube(){
@@ -12,11 +14,10 @@ Cube::Cube(){
 	setCube();
 }
 
-Cube::Cube(int size, float d){
+Cube::Cube(int size){
 	this->size = size;
 	verticesN = size * size * 6;
 	indicesN = (size - 1) * (size - 1) * 36;
-	this->d = d;
 	x0 = -(size / 2) * d;
 	y0 = -(size / 2) * d;
 	z0 = -(size / 2) * d;
@@ -125,4 +126,20 @@ void Cube::setFaceIndices2(WORD* indices, int size, int offset)
 			++j;
 		}
 	}
+}
+
+XMMATRIX Cube::getMatrix() {
+	return matrix;
+}
+
+void Cube::setMatrix(const XMMATRIX& matrix) {
+	this->matrix = matrix;
+}
+
+ConstantBuffer Cube::getConstantBuffer() {
+	return constantBuffer;
+}
+
+void Cube::setConstantBuffer(const ConstantBuffer& constantBuffer) {
+	this->constantBuffer = constantBuffer;
 }
