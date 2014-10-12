@@ -50,6 +50,7 @@ WORD* Cube::getIndices(){
 void Cube::setCube(){
 	int arrSize1 = size * size;
 	int arrSize2 = (size - 1) * (size - 1) * 6;
+<<<<<<< HEAD
 	setFaceVertices(vertices, size, x0, y0, z0, d, XY, XMFLOAT3(0.0f, 0.0f, -1.0f), color);
 	setFaceIndices(indices, size, 0);
 	setFaceVertices(vertices + arrSize1, size, x0, y0, z0, d, XZ, XMFLOAT3(0.0f, -1.0f, 0.0f), color);
@@ -66,6 +67,24 @@ void Cube::setCube(){
 }
 
 void Cube::setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n, XMFLOAT4 color)
+=======
+	setFaceVertices(vertices, size, x0, y0, z0, d, XY, XMFLOAT3(0.0f, 0.0f, -1.0f));
+	setFaceIndices(indices, size, 0);
+	setFaceVertices(vertices + arrSize1, size, x0, y0, z0, d, XZ, XMFLOAT3(0.0f, -1.0f, 0.0f));
+	setFaceIndices2(indices + arrSize2, size, arrSize1);
+	setFaceVertices(vertices + arrSize1 * 2, size, x0, y0, z0, d, YZ, XMFLOAT3(-1.0f, 0.0f, 0.0f));
+	setFaceIndices2(indices + arrSize2 * 2, size, arrSize1 * 2);
+
+	setFaceVertices(vertices + arrSize1 * 3, size, x0, y0, z0 + (size - 1) * d, d, XY, XMFLOAT3(0.0f, 0.0f, 1.0f));
+	setFaceIndices2(indices + arrSize2 * 3, size, arrSize1 * 3);
+	setFaceVertices(vertices + arrSize1 * 4, size, x0, y0 + (size - 1) * d, z0, d, XZ, XMFLOAT3(0.0f, 1.0f, 0.0f));
+	setFaceIndices(indices + arrSize2 * 4, size, arrSize1 * 4);
+	setFaceVertices(vertices + arrSize1 * 5, size, x0 + (size - 1) * d, y0, z0, d, YZ, XMFLOAT3(1.0f, 0.0f, 0.0f));
+	setFaceIndices(indices + arrSize2 * 5, size, arrSize1 * 5);
+}
+
+void Cube::setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n)
+>>>>>>> origin/master
 {
 	for (int i = 0; i < size; ++i)
 	{
@@ -87,7 +106,11 @@ void Cube::setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0,
 				y = y0 + i * d;
 				z = z0 + j * d;
 			}
+<<<<<<< HEAD
 			vertices[i * size + j] = { XMFLOAT3(x, y, z), n , color};
+=======
+			vertices[i * size + j] = { XMFLOAT3(x, y, z), n };
+>>>>>>> origin/master
 		}
 	}
 }

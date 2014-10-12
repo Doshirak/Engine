@@ -6,7 +6,10 @@ struct SimpleVertex
 {
 	XMFLOAT3 Pos;
 	XMFLOAT3 Normal;
+<<<<<<< HEAD
 	XMFLOAT4 Color;
+=======
+>>>>>>> origin/master
 };
 
 struct ConstantBuffer

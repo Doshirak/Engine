@@ -22,6 +22,14 @@
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="figurePool.cpp" />
     <ClCompile Include="figute.cpp" />
+<<<<<<< HEAD
+=======
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tutorial05.fx">
+      <Filter>Shaders</Filter>
+    </None>
+>>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">

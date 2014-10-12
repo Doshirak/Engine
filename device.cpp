@@ -144,7 +144,10 @@ HRESULT Device::init()
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+<<<<<<< HEAD
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+=======
+>>>>>>> origin/master
 	};
 	UINT numElements = ARRAYSIZE(layout);
 
@@ -174,6 +177,7 @@ HRESULT Device::init()
 	if (FAILED(hr))
 		return hr;
 
+<<<<<<< HEAD
 	pPSBlob = NULL;
 	hr = compileShader(L"Shader2.fx", "PS", "ps_4_0", &pPSBlob);
 	if (FAILED(hr))
@@ -209,6 +213,11 @@ HRESULT Device::init()
 	cube->setMatrix(XMMatrixIdentity());
 	sphere->setMatrix(XMMatrixIdentity());
 
+=======
+	Figure* cube = (Figure*) new Cube(20);
+	Figure* sphere = (Figure*) new Sphere(20);
+
+>>>>>>> origin/master
 	figurePool.add(cube);
 	figurePool.add(sphere);
 
@@ -221,6 +230,13 @@ void Device::render()
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&bd, sizeof(bd));
 	ZeroMemory(&InitData, sizeof(InitData));
+<<<<<<< HEAD
+=======
+
+
+	// Set primitive topology
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+>>>>>>> origin/master
 
 	// Create the constant buffer
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -229,6 +245,21 @@ void Device::render()
 	bd.CPUAccessFlags = 0;
 	g_pd3dDevice->CreateBuffer(&bd, NULL, &g_pConstantBuffer);
 
+<<<<<<< HEAD
+=======
+	// Initialize the view matrix
+	XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -10.0f, 0.0f);
+	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	g_View = XMMatrixLookAtLH(Eye, At, Up);
+
+	RECT rc;
+	GetClientRect(g_hWnd, &rc);
+	UINT width = rc.right - rc.left;
+	UINT height = rc.bottom - rc.top;
+	// Initialize the projection matrix
+	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f);
+>>>>>>> origin/master
 
 	// Update our time
 	static float t = 0.0f;
@@ -281,15 +312,28 @@ void Device::render()
 	//XMVECTOR vLightDir = XMLoadFloat4(&vLightDirs[1]);
 	//vLightDir = XMVector3Transform(vLightDir, mRotate);
 	//XMStoreFloat4(&vLightDirs[1], vLightDir);
+<<<<<<< HEAD
+=======
+
+	ConstantBuffer cb1;
+>>>>>>> origin/master
 
 	// FIRST CUBE 
 	XMMATRIX temp = cube->getMatrix();
 	XMMATRIX matrix = XMMatrixMultiply(XMMatrixTranspose(g_Projection), XMMatrixTranspose(g_View));
+<<<<<<< HEAD
 	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(temp));
 	cube->setMatrix(matrix);
 
 	ConstantBuffer cb1;
 	cb1.mWorld = XMMatrixTranspose(temp);
+=======
+	matrix = XMMatrixMultiply(matrix, XMMatrixTranspose(g_World1));
+	Figure* cube = figurePool.getFigures()[0];
+	cube->setMatrix(matrix);
+
+	cb1.mWorld = XMMatrixTranspose(g_World1);
+>>>>>>> origin/master
 	cb1.mView = XMMatrixTranspose(g_View);
 	cb1.mProjection = XMMatrixTranspose(g_Projection);
 	cb1.Matrix = cube->getMatrix();
@@ -301,19 +345,29 @@ void Device::render()
 	cb1.vLightColor[0] = vLightColors[0];
 	cb1.vLightColor[1] = vLightColors[1];
 	cb1.vOutputColor = XMFLOAT4(0, 0, 0, 0);
+<<<<<<< HEAD
 	cube->setConstantBuffer(cb1);
 
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cube->getConstantBuffer(), 0, 0);
 	setVertexBuffer(&bd, &InitData, cube->getVerteces(), cube->getVerticesNumber());
 	setIndexBuffer(&bd, &InitData, cube->getIndices(), cube->getIndicesNumber());
 
+=======
+	
+	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cb1, 0, 0);
+	setVertexBuffer(&bd, &InitData, cube->getVerteces(), cube->getVerticesNumber());
+	setIndexBuffer(&bd, &InitData, cube->getIndices(), cube->getIndicesNumber());
+>>>>>>> origin/master
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
 	g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+<<<<<<< HEAD
 	
 	//g_pImmediateContext->PSSetShader(g_pPixelShader2, NULL, 0);
 	//g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+=======
+>>>>>>> origin/master
 	g_pImmediateContext->DrawIndexed(cube->getIndicesNumber(), 0, 0);									
 
 	// SPHERE
