@@ -16,6 +16,7 @@ cbuffer ConstantBuffer : register( b0 )
     float time;
 	int flag;
 	float PHI;
+	float4 ambientColor;
 	float4 vLightDir[2];
 	float4 vLightColor[2];
 	float4 vOutputColor;
@@ -27,12 +28,14 @@ struct VS_INPUT
 {
     float4 Pos : POSITION;
 	float3 Norm : NORMAL;
+	float4 Color : COLOR0;
 };
 
 struct PS_INPUT
 {
     float4 Pos : SV_POSITION;
 	float3 Norm : TEXCOORD0;
+	float4 Color : COLOR0;
 };
 
 
@@ -79,7 +82,8 @@ PS_INPUT VS( VS_INPUT input )
     output.Pos.w = 1;
     output.Pos = mul( output.Pos, Matrix );
 	output.Norm = mul(input.Norm, World);
-    
+	output.Color = input.Color;
+
     return output;
 }
 
@@ -89,21 +93,39 @@ PS_INPUT VS( VS_INPUT input )
 //--------------------------------------------------------------------------------------
 float4 PS( PS_INPUT input) : SV_Target
 {
-	float4 finalColor = 0;
+	float x = input.Pos.x;
+	float y = input.Pos.y;
+	float Shininess = 1;
+	float4 SpecularColor = float4(1, 1, 1, 1);
+	float SpecularIntensity = 1;
+	float3 ViewVector = float3(1, 0, 0);
+
+	float3 light = normalize(vLightDir[0]);
+	float3 normal = normalize(input.Norm);
+	float3 r = normalize(2 * dot(light, normal) * normal - light);
+	float3 v = normalize(mul(normalize(ViewVector), World));
+	
+	float dotProduct = dot(r, v);
+	float4 specular = SpecularIntensity * SpecularColor * max(pow(dotProduct, Shininess), 0) * length(input.Color);
+
+	float4 finalColor = input.Color;
+
+	finalColor += ambientColor;
 
 	//do NdotL lighting for 2 lights
 	for (int i = 0; i<2; i++)
 	{
+		//difuse
 		finalColor += saturate(dot((float3)vLightDir[i], input.Norm) * vLightColor[i]);
 	}
-	finalColor.a = 1;
+
+	float4 diffuse = dot((float3)vLightDir[0], input.Norm) * vLightColor[0];
+
+	finalColor = saturate(input.Color + specular + ambientColor + diffuse);
+	finalColor.a = 1.0f;
 
 	return finalColor;
+
+	//return input.Color;
 }
 
-// PSSolid - render a solid color
-//--------------------------------------------------------------------------------------
-float4 PSSolid(PS_INPUT input) : SV_Target
-{
-	return vOutputColor;
-}

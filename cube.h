@@ -1,19 +1,25 @@
 #pragma once 
+#include <d3dx11.h>
+#include <xnamath.h>
 #include "device.h"
+#include "figure.h"
 
-class Cube{
+class Cube : Figure {
 public:
 	Cube();
-	Cube(int size, float d);
+	Cube(int size);
 	~Cube();
 	int getVerticesNumber();
 	int getIndicesNumber();
 	SimpleVertex* getVerteces();
 	WORD* getIndices();
+	XMMATRIX getMatrix();
+	void setMatrix(const XMMATRIX& matrix);
+	ConstantBuffer getConstantBuffer();
+	void setConstantBuffer(const ConstantBuffer& constantBuffer);
 private:
-	// number of vertices in one row
 	static const int DEFSIZE = 100;
-	int size = DEFSIZE;
+	// number of vertices in one row
 	float x0;
 	float y0;
 	float z0;
@@ -23,7 +29,10 @@ private:
 	int indicesN;
 	SimpleVertex* vertices;
 	WORD* indices;
+	XMMATRIX matrix;
+	XMFLOAT4 color = {0.1f, 0.1f, 0.1f, 0.1f};
 	void setCube();
-	void setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode);
+	void setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n, XMFLOAT4 color);
 	void setFaceIndices(WORD* indices, int size, int offset);
+	void setFaceIndices2(WORD* indices, int size, int offset);
 };

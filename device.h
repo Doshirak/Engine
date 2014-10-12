@@ -1,9 +1,8 @@
 #pragma once 
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <xnamath.h>
 #include <d3dx11.h>
-
+#include "figurePool.h"
 
 #define HEIGHT 100
 #define RADIUS 2
@@ -14,25 +13,8 @@
 #define XZ 2
 #define YZ 3
 
-
 const int arrSize1 = SIZE * SIZE;
-
 const int arrSize2 = (SIZE - 1) * (SIZE - 1) * 6;
-
-struct SimpleVertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
-};
-
-struct ConstantBuffer
-{
-	XMMATRIX mWorld;
-	XMMATRIX mView;
-	XMMATRIX mProjection;
-	XMMATRIX Matrix;
-	float time;
-};
 
 class Device {
 public:
@@ -57,6 +39,7 @@ private:
 	ID3D11DepthStencilView* g_pDepthStencilView = NULL;
 	ID3D11VertexShader*     g_pVertexShader = NULL;
 	ID3D11PixelShader*      g_pPixelShader = NULL;
+	ID3D11PixelShader*      g_pPixelShader2 = NULL;
 	ID3D11InputLayout*      g_pVertexLayout = NULL;
 	ID3D11Buffer*           g_pVertexBuffer = NULL;
 	ID3D11Buffer*           g_pIndexBuffer = NULL;
@@ -65,5 +48,6 @@ private:
 	XMMATRIX                g_World2;
 	XMMATRIX                g_View;
 	XMMATRIX                g_Projection;
+	FigurePool figurePool;
 	HRESULT compileShader(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 };

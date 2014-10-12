@@ -20,11 +20,8 @@
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="sphere.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Tutorial05.fx">
-      <Filter>Shaders</Filter>
-    </None>
+    <ClCompile Include="figurePool.cpp" />
+    <ClCompile Include="figute.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">
@@ -38,7 +35,12 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="figure.h" />
+    <ClInclude Include="figurePool.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader.fx">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

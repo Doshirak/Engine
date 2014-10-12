@@ -25,14 +25,16 @@ cbuffer ConstantBuffer : register( b0 )
 //--------------------------------------------------------------------------------------
 struct VS_INPUT
 {
-    float4 Pos : POSITION;
+	float4 Pos : POSITION;
 	float3 Norm : NORMAL;
+	float4 Color : COLOR0;
 };
 
 struct PS_INPUT
 {
-    float4 Pos : SV_POSITION;
+	float4 Pos : SV_POSITION;
 	float3 Norm : TEXCOORD0;
+	float4 Color : COLOR0;
 };
 
 
@@ -79,6 +81,7 @@ PS_INPUT VS( VS_INPUT input )
     output.Pos.w = 1;
     output.Pos = mul( output.Pos, Matrix );
 	output.Norm = mul(input.Norm, World);
+	output.Color = input.Color;
     
     return output;
 }
@@ -89,21 +92,10 @@ PS_INPUT VS( VS_INPUT input )
 //--------------------------------------------------------------------------------------
 float4 PS( PS_INPUT input) : SV_Target
 {
-	float4 finalColor = 0;
+	float4 finalColor = input.Color;
 
-	//do NdotL lighting for 2 lights
-	for (int i = 0; i<2; i++)
-	{
-		finalColor += saturate(dot((float3)vLightDir[i], input.Norm) * vLightColor[i]);
-	}
-	finalColor.a = 1;
+	finalColor = 1;
+	finalColor.a = 0.1f;
 
 	return finalColor;
-}
-
-// PSSolid - render a solid color
-//--------------------------------------------------------------------------------------
-float4 PSSolid(PS_INPUT input) : SV_Target
-{
-	return vOutputColor;
 }
