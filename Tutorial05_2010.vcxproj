@@ -396,6 +396,9 @@
     <ResourceCompile Include="Tutorial05.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shader2.fx">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -5,9 +5,17 @@
 struct SimpleVertex
 {
 	XMFLOAT3 Pos;
+<<<<<<< HEAD
 	// D3dMatrix inverse
 	XMFLOAT3 Normal;
 	XMFLOAT4 Color;
+=======
+	XMFLOAT3 Normal;
+<<<<<<< HEAD
+	XMFLOAT4 Color;
+=======
+>>>>>>> origin/master
+>>>>>>> origin/master
 };
 
 struct ConstantBuffer
@@ -19,7 +27,10 @@ struct ConstantBuffer
 	float time;
 	int flag;
 	float PHI;
+<<<<<<< HEAD
 	XMFLOAT4 ambientColor;
+=======
+>>>>>>> origin/master
 	XMFLOAT4 vLightDir[2];
 	XMFLOAT4 vLightColor[2];
 	XMFLOAT4 vOutputColor;

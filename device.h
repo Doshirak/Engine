@@ -16,6 +16,12 @@
 const int arrSize1 = SIZE * SIZE;
 const int arrSize2 = (SIZE - 1) * (SIZE - 1) * 6;
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> origin/master
 class Device {
 public:
 	Device();

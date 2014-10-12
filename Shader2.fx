@@ -94,8 +94,12 @@ float4 PS( PS_INPUT input) : SV_Target
 {
 	float4 finalColor = input.Color;
 
+<<<<<<< HEAD
 	finalColor = 1;
 	finalColor.a = 0.1f;
+=======
+	finalColor.r += 1.0f;
+>>>>>>> origin/master
 
 	return finalColor;
 }

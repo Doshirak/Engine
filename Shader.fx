@@ -16,7 +16,10 @@ cbuffer ConstantBuffer : register( b0 )
     float time;
 	int flag;
 	float PHI;
+<<<<<<< HEAD
 	float4 ambientColor;
+=======
+>>>>>>> origin/master
 	float4 vLightDir[2];
 	float4 vLightColor[2];
 	float4 vOutputColor;
@@ -83,7 +86,11 @@ PS_INPUT VS( VS_INPUT input )
     output.Pos = mul( output.Pos, Matrix );
 	output.Norm = mul(input.Norm, World);
 	output.Color = input.Color;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/master
     return output;
 }
 
@@ -93,6 +100,7 @@ PS_INPUT VS( VS_INPUT input )
 //--------------------------------------------------------------------------------------
 float4 PS( PS_INPUT input) : SV_Target
 {
+<<<<<<< HEAD
 	float x = input.Pos.x;
 	float y = input.Pos.y;
 	float Shininess = 1;
@@ -123,6 +131,17 @@ float4 PS( PS_INPUT input) : SV_Target
 
 	finalColor = saturate(input.Color + specular + ambientColor + diffuse);
 	finalColor.a = 1.0f;
+=======
+	float4 finalColor = input.Color;
+
+	//do NdotL lighting for 2 lights
+	for (int i = 0; i<2; i++)
+	{
+		finalColor += saturate(dot((float3)vLightDir[i], input.Norm) * vLightColor[i]);
+	}
+	finalColor.r += 1.0f;
+	finalColor.a = 1;
+>>>>>>> origin/master
 
 	return finalColor;
 
