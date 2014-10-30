@@ -7,7 +7,7 @@ public:
 	~FigurePool();
 	void add(Figure* figure);
 	int getSize();
-	Figure** getFigures();
+	Figure* getFigures(int i);
 private:
 	std::vector<Figure*> figures;
 };

@@ -29,20 +29,13 @@ private:
 	float y0;
 	float z0;
 	// distance between two vertices in a row 
-<<<<<<< HEAD
 	float radius = 3;
-=======
-	float radius = 1;
->>>>>>> origin/master
 	int verticesN;
 	int indicesN;
 	SimpleVertex* vertices;
 	WORD* indices;
 	XMMATRIX matrix;
-<<<<<<< HEAD
-	XMFLOAT4 color = { 0.1f, 0.1f, 0.1f, 0.1f };
-=======
->>>>>>> origin/master
+	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	void setSphere();
 	void setVertices();
 	void setIndices();

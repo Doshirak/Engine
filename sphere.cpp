@@ -79,22 +79,14 @@ void Sphere::setVertices()
 		{
 			double phi = (float)2 * XM_PI / size * i;
 			vertices[h * size + i] = { XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)),
-<<<<<<< HEAD
 				XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)), color };
-=======
-				XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)) };
->>>>>>> origin/master
 		}
 	}
 	double theta = XM_PI / height * (height - 1);
 	for (int i = 0; i < size; ++i)
 	{
 		double phi = 2 * XM_PI / size * i;
-<<<<<<< HEAD
 		vertices[(height - 1) * size + i] = { XMFLOAT3(x0, y0 + radius * cosf(theta), z0), XMFLOAT3(x0, y0 + radius * cosf(theta), z0), color };
-=======
-		vertices[(height - 1) * size + i] = { XMFLOAT3(x0, y0 + radius * cosf(theta), z0), XMFLOAT3(x0, y0 + radius * cosf(theta), z0) };
->>>>>>> origin/master
 	}
 }
 
@@ -120,20 +112,4 @@ void Sphere::setIndices()
 		indices[((h + 1) * size - 1) * 6 + 4] = (h + 1) * size;
 		indices[((h + 1) * size - 1) * 6 + 5] = j;
 	}
-}
-
-XMMATRIX Sphere::getMatrix() {
-	return matrix;
-}
-
-void Sphere::setMatrix(const XMMATRIX& matrix) {
-	this->matrix = matrix;
-}
-
-ConstantBuffer Sphere::getConstantBuffer() {
-	return constantBuffer;
-}
-
-void Sphere::setConstantBuffer(const ConstantBuffer& constantBuffer) {
-	this->constantBuffer = constantBuffer;
 }

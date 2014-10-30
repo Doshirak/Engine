@@ -16,12 +16,6 @@
 const int arrSize1 = SIZE * SIZE;
 const int arrSize2 = (SIZE - 1) * (SIZE - 1) * 6;
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> origin/master
 class Device {
 public:
 	Device();
@@ -50,10 +44,8 @@ private:
 	ID3D11Buffer*           g_pVertexBuffer = NULL;
 	ID3D11Buffer*           g_pIndexBuffer = NULL;
 	ID3D11Buffer*           g_pConstantBuffer = NULL;
-	XMMATRIX                g_World1;
-	XMMATRIX                g_World2;
-	XMMATRIX                g_View;
-	XMMATRIX                g_Projection;
 	FigurePool figurePool;
+	D3D11_BUFFER_DESC bd;
+	D3D11_SUBRESOURCE_DATA InitData;
 	HRESULT compileShader(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 };

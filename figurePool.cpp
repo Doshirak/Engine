@@ -14,6 +14,6 @@ int FigurePool::getSize() {
 	return figures.size();
 }
 
-Figure** FigurePool::getFigures(){
-	return figures.data();
+Figure* FigurePool::getFigures(int i) {
+	return figures.at(i);
 }

@@ -22,17 +22,6 @@
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="figurePool.cpp" />
     <ClCompile Include="figute.cpp" />
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Tutorial05.fx">
-      <Filter>Shaders</Filter>
-    </None>
->>>>>>> origin/master
->>>>>>> origin/master
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">
@@ -53,11 +42,5 @@
     <None Include="Shader.fx">
       <Filter>Shaders</Filter>
     </None>
-<<<<<<< HEAD
-=======
-    <None Include="Shader2.fx">
-      <Filter>Shaders</Filter>
-    </None>
->>>>>>> origin/master
   </ItemGroup>
 </Project>

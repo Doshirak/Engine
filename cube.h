@@ -30,20 +30,9 @@ private:
 	SimpleVertex* vertices;
 	WORD* indices;
 	XMMATRIX matrix;
-<<<<<<< HEAD
-	XMFLOAT4 color = {0.1f, 0.1f, 0.1f, 0.1f};
+	XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	void setCube();
 	void setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n, XMFLOAT4 color);
-=======
-<<<<<<< HEAD
-	XMFLOAT4 color = {0.0f, 0.5f, 0.5f, 0.5f};
-	void setCube();
-	void setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n, XMFLOAT4 color);
-=======
-	void setCube();
-	void setFaceVertices(SimpleVertex* vertices, int size, float x0, float y0, float z0, float d, int mode, XMFLOAT3 n);
->>>>>>> origin/master
->>>>>>> origin/master
 	void setFaceIndices(WORD* indices, int size, int offset);
 	void setFaceIndices2(WORD* indices, int size, int offset);
 };

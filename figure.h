@@ -5,35 +5,22 @@
 struct SimpleVertex
 {
 	XMFLOAT3 Pos;
-<<<<<<< HEAD
-	// D3dMatrix inverse
 	XMFLOAT3 Normal;
 	XMFLOAT4 Color;
-=======
-	XMFLOAT3 Normal;
-<<<<<<< HEAD
-	XMFLOAT4 Color;
-=======
->>>>>>> origin/master
->>>>>>> origin/master
 };
 
 struct ConstantBuffer
 {
-	XMMATRIX mWorld;
-	XMMATRIX mView;
-	XMMATRIX mProjection;
-	XMMATRIX Matrix;
-	float time;
-	int flag;
-	float PHI;
-<<<<<<< HEAD
+	XMMATRIX word;
+	XMMATRIX view;
+	XMMATRIX projection;
+	XMMATRIX inversedWorld;
+	XMFLOAT4 eye;
+	XMFLOAT3 lightDirection;
 	XMFLOAT4 ambientColor;
-=======
->>>>>>> origin/master
-	XMFLOAT4 vLightDir[2];
-	XMFLOAT4 vLightColor[2];
-	XMFLOAT4 vOutputColor;
+	XMFLOAT4 diffuseColor;
+	XMFLOAT4 specularColor;
+	FLOAT shininess;
 };
 
 class Figure {
@@ -44,12 +31,7 @@ public:
 	virtual WORD* getIndices() = 0;
 	virtual int getVerticesNumber() = 0;
 	virtual int getIndicesNumber() = 0;
-	virtual XMMATRIX getMatrix() = 0;
-	virtual void setMatrix(const XMMATRIX& matrix) = 0;
-	virtual ConstantBuffer getConstantBuffer() = 0;
-	virtual void setConstantBuffer(const ConstantBuffer& constantBuffer) = 0;
-protected:
 	int size;
-	XMMATRIX matrix;
-	ConstantBuffer constantBuffer;
+	ConstantBuffer cb;
+	XMFLOAT4 color;
 };
