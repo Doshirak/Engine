@@ -78,8 +78,13 @@ void Sphere::setVertices()
 		for (int i = 0; i < size; ++i)
 		{
 			double phi = (float)2 * XM_PI / size * i;
-			vertices[h * size + i] = { XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)),
-				XMFLOAT3(x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta)), color };
+			XMVECTOR coord = { x0 + radius * cosf(phi) * sinf(theta), y0 + radius * cosf(theta), z0 + radius * sinf(phi) * sinf(theta) };
+			XMVECTOR norm = XMVector3Normalize(coord);
+			XMFLOAT3 coordF;
+			XMFLOAT3 normF;
+			XMStoreFloat3(&coordF, coord);
+			XMStoreFloat3(&normF, norm);
+			vertices[h * size + i] = { coordF, normF, color };
 		}
 	}
 	double theta = XM_PI / height * (height - 1);

@@ -162,32 +162,38 @@ HRESULT Device::init()
 
 	// LIGHTS
 	XMFLOAT3 lightDirection = { 10.0f, 10.0f, 0.0f };
-	XMFLOAT4 ambientColor = { 0, 0, 0, 0.1f };
-	XMFLOAT4 diffuseColor = { 0.5f, 0.5f, 0.5f, 0.5f };
-	XMFLOAT4 specularColor = { 0.5f, 0.5f, 0.5f, 0.5f };
+	XMFLOAT3 pointLightPos = { 0.0f, 2.0f, 0.0f };
+	XMFLOAT4 ambientColor = { 0, 0.5f, 0.5f, 0.5f };
+	XMFLOAT4 diffuseColor = { 0.0f, 0.0f, 0.0f, 0.3f };
+	XMFLOAT4 specularColor = { 0.0f, 0.01f, 0.01f, 0.01f };
+	XMFLOAT3 spotLightPos = {0.0f, 0.0f, 2.0f};
 
 	// CUBE
 	Figure* cube = (Figure*) new Cube(20);
 	cube->cb.view = XMMatrixTranspose(view);
 	cube->cb.projection = XMMatrixTranspose(projection);
 	cube->cb.eye = XMFLOAT4(0.0f, 3.0f, -10.0f, 0.0f);
-	cube->cb.ambientColor = ambientColor;
 	cube->cb.lightDirection = lightDirection;
+	cube->cb.pointLightPos = pointLightPos;
+	cube->cb.ambientColor = ambientColor;
 	cube->cb.diffuseColor = diffuseColor;
 	cube->cb.specularColor = specularColor;
-	cube->cb.shininess = 200;
+	cube->cb.shininess = 1;
+	cube->cb.attenuation = 2;
 	figurePool.add(cube);
 
 	// SPHERE
-	Figure* sphere = (Figure*) new Sphere(50);
+	Figure* sphere = (Figure*) new Sphere(20);
 	sphere->cb.view = XMMatrixTranspose(view);
 	sphere->cb.projection = XMMatrixTranspose(projection);
 	sphere->cb.eye = XMFLOAT4(0.0f, 3.0f, -10.0f, 0.0f);
-	sphere->cb.ambientColor = ambientColor;
 	sphere->cb.lightDirection = lightDirection;
+	sphere->cb.pointLightPos = pointLightPos;
+	sphere->cb.ambientColor = ambientColor;
 	sphere->cb.diffuseColor = diffuseColor;
 	sphere->cb.specularColor = specularColor;
-	sphere->cb.shininess = 200;
+	sphere->cb.shininess = 1;
+	sphere->cb.attenuation = 1;
 	figurePool.add(sphere);
 
 	// CREATE CONSTANT BUFFER
@@ -216,26 +222,29 @@ void Device::render()
 			dwTimeStart = dwTimeCur;
 		t = (dwTimeCur - dwTimeStart) / 1000.0f;
 
-	XMMATRIX spin, orbit, translate, scale;
+	XMMATRIX spin, orbit, translate, scale, world;
+	XMVECTOR vector;
 	
 	// CUBE 
 
-	Figure* cube = figurePool.getFigures(0);
-	setVertexBuffer(&bd, &InitData, cube->getVerteces(), cube->getVerticesNumber());
-	setIndexBuffer(&bd, &InitData, cube->getIndices(), cube->getIndicesNumber());
+	//Figure* cube = figurePool.getFigures(0);
+	//setVertexBuffer(&bd, &InitData, cube->getVerteces(), cube->getVerticesNumber());
+	//setIndexBuffer(&bd, &InitData, cube->getIndices(), cube->getIndicesNumber());
 
-	spin = XMMatrixRotationZ(-t);
-	orbit = XMMatrixRotationY(0);
-	translate = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-	scale = XMMatrixScaling(0.5f, 0.5, 0.5f);
-	cube->cb.word = XMMatrixTranspose(scale * spin * translate * orbit);
-	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cube->cb, 0, 0);
+	//spin = XMMatrixRotationZ(-t);
+	//orbit = XMMatrixIdentity();
+	//translate = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	//scale = XMMatrixScaling(0.5f, 0.5, 0.5f);
+	//world = scale * spin * translate * orbit;
+	//cube->cb.world = XMMatrixTranspose(world);
+	//cube->cb.inversedWorld = XMMatrixInverse(&vector, world);
+	//g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &cube->cb, 0, 0);
 
-	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
-	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
-	g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
-	g_pImmediateContext->DrawIndexed(cube->getIndicesNumber(), 0, 0);
+	//g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);
+	//g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	//g_pImmediateContext->PSSetShader(g_pPixelShader, NULL, 0);
+	//g_pImmediateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	//g_pImmediateContext->DrawIndexed(cube->getIndicesNumber(), 0, 0);
 
 
 	//// SPHERE
@@ -245,10 +254,13 @@ void Device::render()
 	setIndexBuffer(&bd, &InitData, sphere->getIndices(), sphere->getIndicesNumber());
 
 	spin = XMMatrixRotationZ(-t);
-	orbit = XMMatrixRotationY(-t * 2.0f);
-	translate = XMMatrixTranslation(-6.0f, 0.0f, 0.0f);
-	scale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
-	sphere->cb.word = XMMatrixTranspose(scale * spin * translate * orbit);
+	//orbit = XMMatrixRotationY(-t * 2.0f);
+	orbit = XMMatrixIdentity();
+	translate = XMMatrixTranslation(3 * sinf(t), 0.0f, 0.0f);
+	scale = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	world = scale * spin * translate * orbit;
+	sphere->cb.world = XMMatrixTranspose(world);
+	sphere->cb.inversedWorld = XMMatrixInverse(&vector, world);
 	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, NULL, &sphere->cb, 0, 0);
 
 	g_pImmediateContext->VSSetShader(g_pVertexShader, NULL, 0);

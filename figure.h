@@ -11,7 +11,7 @@ struct SimpleVertex
 
 struct ConstantBuffer
 {
-	XMMATRIX word;
+	XMMATRIX world;
 	XMMATRIX view;
 	XMMATRIX projection;
 	XMMATRIX inversedWorld;
@@ -20,7 +20,10 @@ struct ConstantBuffer
 	XMFLOAT4 ambientColor;
 	XMFLOAT4 diffuseColor;
 	XMFLOAT4 specularColor;
-	FLOAT shininess;
+	XMFLOAT3 pointLightPos;
+	XMFLOAT3 specularLightPos;
+	INT shininess;
+	INT attenuation;
 };
 
 class Figure {
